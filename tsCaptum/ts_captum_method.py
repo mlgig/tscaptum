@@ -6,6 +6,7 @@ from captum.attr import (FeatureAblation as _FeatureAblationCaptum,
                          FeaturePermutation as _FeaturePermutationCaptum)
 
 from ._forwarder import _Forwarder
+from ._utils import  _check_convert_data_format
 
 
 # TODO should I move this class in some .utils.py along with chunking code? NOPE
@@ -40,30 +41,39 @@ class _TSCaptum_Method():
 		self._explainer = explainer(self._Forwarder.forward)
 
 	# TODO check how y is handled in captum attribute
-	def explain(self, X: np.array, labels=None):
+	def explain(self, samples, labels=None, batch_size=8):
 
-		# TODO handle both numpy and torch arrays?
 		# TODO batch size, default 8 or 16?
 		# TODO add chunking
 
-		X = torch.tensor(X)
-		if self.predictor_type == "regressor":
-			explanation = self._explainer.attribute(X)
-
-		elif self.predictor_type == "classifier":
-
+		# TODO to be moved in another function?
+		if self.predictor_type == "classifier":
 			# transform to numeric labels
 			le = LabelEncoder()
 			labels_idx = torch.tensor(le.fit_transform(labels))
 
-			# then explain
-			explanation = self._explainer.attribute(X, target=labels_idx)
+		elif self.predictor_type == "regressor":
+			labels_idx = labels
 
 		else:
 			raise (
 				" provided regressor type not recognized. Please specify whether is a classifier or regressor ")
 
-		return explanation.detach().numpy()
+		loader = _check_convert_data_format(samples,labels_idx,batch_size)
+
+
+		# TODO add tqdm?
+		explanations = []
+		with torch.no_grad():
+			# TODO change in enumerate?
+			for X,y in loader:
+				if self.predictor_type == "classifier":
+					current_exp = self._explainer.attribute(X, target=y)
+				else:
+					current_exp = self._explainer.attribute(X)
+				explanations.append( current_exp.detach().numpy() )
+
+		return np.concatenate(explanations)
 
 
 class Feature_Ablation(_TSCaptum_Method):
