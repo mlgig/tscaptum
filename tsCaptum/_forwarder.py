@@ -3,18 +3,18 @@ import torch
 
 # documentation for each method!
 
-class _Forward():
+class _Forwarder():
 
 	# TODO specify possible clf type as aeonClf | SktimeClf | ....
 
-	def __init__(self,clf, clf_type):
+	def __init__(self,predictor, predictor_type):
 		# TODO should I make the following two variables private?
-		self.clf = clf
-		if clf_type == "regressor":
+		self.predictor = predictor
+		if predictor_type == "regressor":
 			# TODO can I avoid it?
-			self.raw_result_func = self.clf.predict
-		elif clf_type == "classifier":
-			self.raw_result_func = self.clf.predict_proba
+			self.raw_result_func = self.predictor.predict
+		elif predictor_type == "classifier":
+			self.raw_result_func = self.predictor.predict_proba
 		else:
 			raise (" provided model not recoginzed. Please specify whether is a classifier or regressor ")
 

@@ -5,39 +5,39 @@ from captum.attr._utils.attribution import PerturbationAttribution
 from captum.attr import (FeatureAblation as _FeatureAblationCaptum,
                          FeaturePermutation as _FeaturePermutationCaptum)
 
-from ._forward import _Forward
+from ._forwarder import _Forwarder
 
 
-# TODO should I move this class in some .utils.py along with chunking code
+# TODO should I move this class in some .utils.py along with chunking code? NOPE
 #  (btw modify s.t. the last segment isn't the short one) etc. ? Probably not
 # TODO documentation for each method in each class
 
 class _TSCaptum_Method():
 
 	# TODO specify clf possible types as aeon | sktime | ...
-	def __init__(self, explainer, clf, clf_type: str = None):
+	def __init__(self, explainer, predictor, predictor_type: str = None):
 
 		# check argument values
 		if not issubclass(explainer, PerturbationAttribution):
 			raise (
 				" provided explainer has to be an instance of 'captum.attr._utils.attribution.PerturbationAttribution' ")
 
-		if not clf_type in ["classifier", "regressor", None]:
+		if not predictor_type in ["classifier", "regressor", None]:
 			raise (
 				" clf_type argument has to be either  'classifier' or 'regressor' ")
 
 		# check whether is a classifier or a regressor      # TODO is it okay to do it in this way?
-		self.clf_type = clf_type
-		if self.clf_type is None:
-			self.clf_type = "classifier"
+		self.predictor_type = predictor_type
+		if self.predictor_type is None:
+			self.predictor_type = "classifier"
 			try:
-				clf.predict_proba
+				predictor.predict_proba
 			except AttributeError:
-				self.clf_type = "regressor"
+				self.predictor_type = "regressor"
 
 		# set also forward function and explainer to be used
-		self._Forward_class = _Forward(clf, self.clf_type)
-		self._explainer = explainer(self._Forward_class.forward)
+		self._Forwarder = _Forwarder(predictor, self.predictor_type)
+		self._explainer = explainer(self._Forwarder.forward)
 
 	# TODO check how y is handled in captum attribute
 	def explain(self, X: np.array, labels=None):
@@ -47,10 +47,10 @@ class _TSCaptum_Method():
 		# TODO add chunking
 
 		X = torch.tensor(X)
-		if self.clf_type == "regressor":
+		if self.predictor_type == "regressor":
 			explanation = self._explainer.attribute(X)
 
-		elif self.clf_type == "classifier":
+		elif self.predictor_type == "classifier":
 
 			# transform to numeric labels
 			le = LabelEncoder()
@@ -61,7 +61,7 @@ class _TSCaptum_Method():
 
 		else:
 			raise (
-				" provided model not recoginzed. Please specify whether is a classifier or regressor ")
+				" provided regressor type not recognized. Please specify whether is a classifier or regressor ")
 
 		return explanation.detach().numpy()
 
