@@ -11,7 +11,6 @@ class _Forwarder():
 		# TODO should I make the following two variables private?
 		self.predictor = predictor
 		if predictor_type == "regressor":
-			# TODO can I avoid it?
 			self.raw_result_func = self.predictor.predict
 		elif predictor_type == "classifier":
 			self.raw_result_func = self.predictor.predict_proba
@@ -21,7 +20,6 @@ class _Forwarder():
 	def forward(self, X ):
 
 		# convert X to pytorch tensor
-		# TODO force  each variable's type
 		X_numpy : np.array = X.detach().numpy()
 		# use the model forward function
 		preds : np.array = self.raw_result_func(X_numpy)
