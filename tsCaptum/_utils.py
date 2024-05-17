@@ -5,6 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 
 from ._tsCaptum_loader import _tsCaptum_loader
 
+# TODO check to aeon, sktime, torch and captum how function in utils are called (with or without leading _) ?
 
 def equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int):
 	"""
@@ -14,7 +15,7 @@ def equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int
 	:param n_chunks:        number of chunks to be used
 	:param n_channels:      number of channel of each instance in the dataset
 	:param series_length:   length of each channel of each instance in the dataset
-	:return:                a numpy array representing how to group the time points
+	:return:                a tensor representing how to group time points
 	"""
 	quotient, reminder = np.floor(series_length / n_chunks).astype(int) , series_length % n_chunks
 
@@ -23,8 +24,19 @@ def equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int
 
 	second_group = np.array([[i + j * n_chunks for i in range( reminder,n_chunks )] for j in range(n_channels)])
 	second_group = np.expand_dims(np.repeat(second_group,quotient, axis=1), 0)
+
 	final_group = np.concatenate((first_group,second_group),axis=-1)
-	return torch.tensor(final_group)
+	return torch.tensor(final_group).to(torch.int64)
+
+def normalise_result(X):
+	# TODO can i do it better? Do i have other cases? check how aeon treat UTS
+	# TODO should I also include the straitforward way i.e. 2* (x * max) / (max - min) ?
+	assert len(X.shape)==3
+	results = []
+	for x in X:
+		scaling_factor = 1 / max ( np.abs(x.max()) , np.abs(x.min())  )
+		results.append( scaling_factor * x )
+	return results
 
 
 def _check_labels(labels, predictor_type):
