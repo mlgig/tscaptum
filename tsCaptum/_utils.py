@@ -46,19 +46,29 @@ def _check_labels(labels, predictor_type):
 		labels_idx = torch.tensor(le.fit_transform(labels)).type(torch.int64)
 
 	elif predictor_type == "regressor":
-		assert labels is None
+		if labels is not None:
+			raise ValueError(
+				"specified labels when predictor type is regressor"
+			)
 		le = None
 		labels_idx = None
 
 	else:
 		raise (
-			" provided predictor type not recognized. Please specify whether is a classifier or regressor ")
+			" provided predictor type not recognized. Please specify whether is a classifier or regressor "
+		)
 
 	return le, labels_idx
 
 
 def _check_convert_data_format(X, labels, batch_size):
-	# TODO check if X and labels have the same dimension
+
+	if X is None and labels is not None:
+		if X.shape[0] != labels.shape[0]:
+			# if both X and labels are provided and they have no matching dimensions
+			raise ValueError(
+				"provided samples and labels have different dimensions"
+			)
 
 	if isinstance(X, np.ndarray):
 		X = torch.tensor(X).type(torch.float)
@@ -66,7 +76,8 @@ def _check_convert_data_format(X, labels, batch_size):
 		X = X.type(torch.float)
 	else:
 		raise TypeError(
-			" Data format has to be either numpy array or torch tensor ")
+			" Data format has to be either numpy array or torch tensor "
+		)
 
 	if labels is None:
 		labels = torch.ones(X.shape[0]) * -1
