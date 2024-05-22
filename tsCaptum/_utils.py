@@ -7,15 +7,18 @@ from ._tsCaptum_loader import _tsCaptum_loader
 
 # TODO check to aeon, sktime, torch and captum how function in utils are called (with or without leading _) ?
 
-def equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int):
-	"""
+def _equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int):
+	r"""
 	function returning how to group time points into time Series accordingly to the given arguments
-	To be noted that it operates channel-wise i.e. each channel is divided into "n_chunks" chunks
+	To be noted that it operates channel-wise i.e. each channel is divided into 'n_chunks' chunks
 
 	:param n_chunks:        number of chunks to be used
+
 	:param n_channels:      number of channel of each instance in the dataset
+
 	:param series_length:   length of each channel of each instance in the dataset
-	:return:                a tensor representing how to group time points
+
+	:return:                a torch tensor representing how to group time points
 	"""
 	quotient, reminder = np.floor(series_length / n_chunks).astype(int) , series_length % n_chunks
 
@@ -28,7 +31,7 @@ def equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int
 	final_group = np.concatenate((first_group,second_group),axis=-1)
 	return torch.tensor(final_group).to(torch.int64)
 
-def normalise_result(X):
+def _normalise_result(X):
 	# TODO can i do it better? Do i have other cases? check how aeon treat UTS
 	# TODO should I also include the straitforward way i.e. 2* (x * max) / (max - min) ?
 	assert len(X.shape)==3
@@ -40,6 +43,16 @@ def normalise_result(X):
 
 
 def _check_labels(labels, predictor_type):
+	r"""
+	function checking the label argument provided to explain method and converting them into integer representation as
+	required by captum
+
+	:param labels:          provided labels
+
+	:param predictor_type:  predictor's type i.e. classifier or regressor
+
+	:return:                label encoder and relative integer indices
+	"""
 	if predictor_type == "classifier":
 		# transform to numeric labels
 		le = LabelEncoder()
@@ -62,6 +75,17 @@ def _check_labels(labels, predictor_type):
 
 
 def _check_convert_data_format(X, labels, batch_size):
+	r"""
+	function checking and converting provided samples and labels to explain method
+
+	:param X:           sample to explain. Can be provided as numpy array or as torch tensor
+
+	:param labels:      labels provided to explain method
+
+	:param batch_size:  batch size provided to explain method
+
+	:return:            data loader to be used in the explain method
+	"""
 
 	if X is None and labels is not None:
 		if X.shape[0] != labels.shape[0]:
