@@ -12,7 +12,7 @@ A Captum wrapper for Time Series XAI
     
     year = {2024},
     
-    note = {Temporary bibitex entry}
+    note = {Temporary bibitex entry},
     
     url = { https://github.com/mlgig/tscaptum },
 }
