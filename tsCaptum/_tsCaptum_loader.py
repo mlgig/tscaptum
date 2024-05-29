@@ -1,8 +1,9 @@
-from torch.utils.data import  Dataset
+from torch.utils.data import Dataset
+
 
 class _tsCaptum_loader(Dataset):
 
-	def __init__(self,X,labels):
+	def __init__(self, X, labels):
 		super().__init__()
 		self.X = X
 		self.labels = labels

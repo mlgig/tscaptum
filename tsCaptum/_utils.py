@@ -5,6 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 
 from ._tsCaptum_loader import _tsCaptum_loader
 
+
 # TODO check to aeon, sktime, torch and captum how function in utils are called (with or without leading _) ?
 
 def _equal_length_segmentation(n_chunks: int, n_channels: int, series_length: int):
@@ -20,25 +21,32 @@ def _equal_length_segmentation(n_chunks: int, n_channels: int, series_length: in
 
 	:return:                a torch tensor representing how to group time points
 	"""
-	quotient, reminder = np.floor(series_length / n_chunks).astype(int) , series_length % n_chunks
+	quotient, reminder = np.floor(series_length / n_chunks).astype(int), series_length % n_chunks
 
 	first_group = np.array([[i + j * n_chunks for i in range(reminder)] for j in range(n_channels)])
-	first_group = np.expand_dims(np.repeat(first_group,(quotient+1), axis=1), 0)
+	first_group = np.expand_dims(np.repeat(first_group, (quotient + 1), axis=1), 0)
 
-	second_group = np.array([[i + j * n_chunks for i in range( reminder,n_chunks )] for j in range(n_channels)])
-	second_group = np.expand_dims(np.repeat(second_group,quotient, axis=1), 0)
+	second_group = np.array([[i + j * n_chunks for i in range(reminder, n_chunks)] for j in range(n_channels)])
+	second_group = np.expand_dims(np.repeat(second_group, quotient, axis=1), 0)
 
-	final_group = np.concatenate((first_group,second_group),axis=-1)
+	final_group = np.concatenate((first_group, second_group), axis=-1)
 	return torch.tensor(final_group).to(torch.int64)
 
+
 def _normalise_result(X):
-	# TODO can i do it better? Do i have other cases? check how aeon treat UTS
-	# TODO should I also include the straitforward way i.e. 2* (x * max) / (max - min) ?
-	assert len(X.shape)==3
+	"""
+	function to normalize obtained saliency map
+
+	:param X: the saliency map to be normalized
+
+	:return: normalized version of X
+	"""
+
+	assert len(X.shape) == 3
 	results = []
 	for x in X:
-		scaling_factor = 1 / max ( np.abs(x.max()) , np.abs(x.min())  )
-		results.append( scaling_factor * x )
+		scaling_factor = 1 / max(np.abs(x.max()), np.abs(x.min()))
+		results.append(scaling_factor * x)
 	return results
 
 
@@ -89,7 +97,7 @@ def _check_convert_data_format(X, labels, batch_size):
 
 	if X is None and labels is not None:
 		if X.shape[0] != labels.shape[0]:
-			# if both X and labels are provided and they have no matching dimensions
+			# if both X and labels are provided having no matching dimensions
 			raise ValueError(
 				"provided samples and labels have different dimensions"
 			)

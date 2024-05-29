@@ -13,10 +13,11 @@ from ._utils import _check_convert_data_format, _check_labels, _normalise_result
 from ._utils import *
 
 
-class _TSCaptum_Method():
-	r"""
-	superclass for all attribution method provided
+class _TSCaptum_Method:
 	"""
+	super class for all attribution methods
+	"""
+
 	def __init__(self, explainer, predictor, predictor_type: str = None):
 		r"""
 		init method for the superclass
@@ -24,7 +25,7 @@ class _TSCaptum_Method():
 		:param explainer:       the actual explainer that will be used for computing the saliency maps.
 		Each subclass fix this argument as the corresponding Captum explainer
 
-		:param predictor:       the predictor that will explained
+		:param predictor:       the predictor that will be explained
 		:param predictor_type:  which type the predictor is i.e. classifier or regressor
 		"""
 
@@ -33,7 +34,7 @@ class _TSCaptum_Method():
 			raise (
 				" provided explainer has to be an instance of 'captum.attr._utils.attribution.PerturbationAttribution' ")
 
-		if not predictor_type in ["classifier", "regressor", None]:
+		if predictor_type not in ["classifier", "regressor", None]:
 			raise (
 				" clf_type argument has to be either  'classifier' or 'regressor' ")
 
@@ -61,7 +62,8 @@ class _TSCaptum_Method():
 
 		:param batch_size:  the batch_size to be used i.e. number of samples to be explained at the same time
 
-		:param n_segments:  number of segments the timeseries is dived to. If you want to explain point-wise provide -1 as value #TODO should we put more information about how it works?
+		:param n_segments:  number of segments the timeseries is dived to. If you want to explain point-wise provide -1 as
+		value #TODO should we put more information about how it works?
 
 		:param normalise:   whether or not to normalise the result
 
@@ -81,19 +83,19 @@ class _TSCaptum_Method():
 		with tqdm(total=n_2explain) as pbar:
 			with torch.no_grad():
 				for n, (X, y) in enumerate(loader):
-
 					# fix kwargs for the relative captum method
 					kwargs = self._define_kwargs(baseline, n_channels, n_segments, series_length, y)
-					# get the current saliency maps, convert it to nunpy array and store it to a temp list
+					# get the current saliency maps, convert it to numpy array and store it to a temp list
 					current_exps = self._explainer.attribute(X, **kwargs)
-					explanations.append( _normalise_result(current_exps.detach().numpy()) ) if normalise else explanations.append( current_exps.detach().numpy() )
+					explanations.append(
+						_normalise_result(current_exps.detach().numpy())) if normalise \
+						else explanations.append(current_exps.detach().numpy())
 					pbar.update(batch_size)
 		pbar.close()
 
 		# convert the list to numpy array and return it as result
 		explanations = np.concatenate(explanations)
 		return explanations
-
 
 	def _define_kwargs(self, baseline, n_channels, n_segments, series_length, y):
 		r"""
@@ -107,9 +109,9 @@ class _TSCaptum_Method():
 		if not isinstance(self, Feature_Permutation):
 			if np.isscalar(baseline):
 				kwargs['baselines'] = baseline
-			elif type(baseline)==np.ndarray:
+			elif type(baseline) is np.ndarray:
 				kwargs['baselines'] = torch.tensor(baseline)
-			elif type(baseline)==torch.Tensor:
+			elif type(baseline) is torch.Tensor:
 				kwargs['baselines'] = baseline
 
 		# labels
@@ -133,7 +135,6 @@ class Feature_Ablation(_TSCaptum_Method):
 		super().__init__(_FeatureAblationCaptum, clf, clf_type)
 
 
-
 class Feature_Permutation(_TSCaptum_Method):
 	r"""
 	Wrapper for feature permutation method
@@ -153,11 +154,11 @@ class Feature_Permutation(_TSCaptum_Method):
 
 		:calling:       TSCaptum_Method'e explain
 		"""
-		if 'batch_size' in  kwargs and kwargs['batch_size'] != 1:
+		if 'batch_size' in kwargs and kwargs['batch_size'] != 1:
 			warnings.warn(
 				"batch_size set to 2 as Feature Permutation require more than 1 sample to work"
 			)
-			kwargs['batch_size']=2
+			kwargs['batch_size'] = 2
 
 		if 'baseline' in kwargs:
 			warnings.warn(
@@ -170,6 +171,7 @@ class Kernel_Shap(_TSCaptum_Method):
 	r"""
 	Wrapper for KernelSHAP method
 	"""
+
 	def __init__(self, clf, clf_type=None):
 		super().__init__(_KernelShapCaptum, clf, clf_type)
 
@@ -184,7 +186,7 @@ class Kernel_Shap(_TSCaptum_Method):
 
 		:calling:       TSCaptum_Method'e explain
 		"""
-		if 'batch_size' in  kwargs and kwargs['batch_size'] != 1:
+		if 'batch_size' in kwargs and kwargs['batch_size'] != 1:
 			warnings.warn(
 				"batch_size set to 1 as suggested by Captum for Lime and KernelSHAP"
 			)
@@ -196,6 +198,7 @@ class LIME(_TSCaptum_Method):
 	r"""
 	Wrapper for LIME method
 	"""
+
 	def __init__(self, clf, clf_type=None):
 		super().__init__(_LimeCaptum, clf, clf_type)
 
@@ -210,7 +213,7 @@ class LIME(_TSCaptum_Method):
 
 		:calling:       TSCaptum_Method'e explain
 		"""
-		if 'batch_size' in  kwargs and kwargs['batch_size'] != 1:
+		if 'batch_size' in kwargs and kwargs['batch_size'] != 1:
 			warnings.warn(
 				"batch_size set to 1 as suggested by Captum for Lime and KernelSHAP"
 			)
@@ -218,11 +221,11 @@ class LIME(_TSCaptum_Method):
 		return super().explain(samples, **kwargs)
 
 
-
 class Shapley_Value_Sampling(_TSCaptum_Method):
 	r"""
-	Wrapper for Shapley Value Sampling method. Most of the time this is the best approximation of the intractable Shapley values
+	Wrapper for Shapley Value Sampling method. Most of the time this is the best approximation of the intractable
+	Shapley values
 	"""
+
 	def __init__(self, clf, clf_type=None):
 		super().__init__(_ShapleyValueSamplingCaptum, clf, clf_type)
-
