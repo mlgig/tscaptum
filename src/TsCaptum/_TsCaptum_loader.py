@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 
 
-class _tsCaptum_loader(Dataset):
+class _TsCaptum_loader(Dataset):
 
 	def __init__(self, X, labels):
 		super().__init__()

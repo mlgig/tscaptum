@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=69.5.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TsCaptum"
+version = "0.0.4.1"
+authors = [  { name="Davide Serramazza", email="davide.serramazza@ucdconnect.ie" },]
+description = "A Captum wrapper for Time Series XAI"
+readme = "README.md"
+requires-python = ">=3.8,<3.12"
+dependencies = [
+	"scikit-learn",
+	"aeon",
+	"tqdm",
+	"torch>=2.0.0",
+	"captum==0.7.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/mlgig/tscaptum/"
