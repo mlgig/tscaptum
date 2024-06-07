@@ -12,6 +12,7 @@ requires-python = ">=3.8,<3.12"
 dependencies = [
 	"scikit-learn",
 	"aeon",
+	"openpyxl",
 	"tqdm",
 	"torch>=2.0.0",
 	"captum==0.7.0"
