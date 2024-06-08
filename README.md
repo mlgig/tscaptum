@@ -26,9 +26,8 @@ installing torch (e.g. you use Linux as OS and you want a lighter installation) 
 "pip3 install torch --index-url https://download.pytorch.org/whl/cpu && pip install tsCaptum"
 
 In case you use this library please cite:
-
+```
 @misc{tsCaptum,
-    
     author = {Davide Italo Serramazza, Thach Le Nguyen, Georgiana Ifrim},
     title = {tsCaptum: adapting Captum explainers for time series and scikit-learn-like predictors},
     howpublished = {GitHub},
@@ -36,3 +35,4 @@ In case you use this library please cite:
     note = {Temporary bibitex entry},
     url = { https://github.com/mlgig/tscaptum },
 }
+```
