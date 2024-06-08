@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader
 from sklearn.preprocessing import LabelEncoder
 
-from ._TsCaptum_loader import _TsCaptum_loader
+from ._tsCaptum_loader import _tsCaptum_loader
 
 
 # TODO check to aeon, sktime, torch and captum how function in utils are called (with or without leading _) ?
@@ -113,6 +113,6 @@ def _check_convert_data_format(X, labels, batch_size):
 
 	if labels is None:
 		labels = torch.ones(X.shape[0]) * -1
-	loader = DataLoader(_TsCaptum_loader(X, labels), shuffle=False, batch_size=batch_size)
+	loader = DataLoader(_tsCaptum_loader(X, labels), shuffle=False, batch_size=batch_size)
 
 	return loader

@@ -13,7 +13,7 @@ from ._utils import _check_convert_data_format, _check_labels, _normalise_result
 from ._utils import *
 
 
-class _TsCaptum_Method:
+class _tsCaptum_Method:
 	"""
 	super class for all attribution methods
 	"""
@@ -126,7 +126,7 @@ class _TsCaptum_Method:
 		return kwargs
 
 
-class Feature_Ablation(_TsCaptum_Method):
+class Feature_Ablation(_tsCaptum_Method):
 	r"""
 	Wrapper for Feature Ablation method
 	"""
@@ -135,7 +135,7 @@ class Feature_Ablation(_TsCaptum_Method):
 		super().__init__(_FeatureAblationCaptum, clf, clf_type)
 
 
-class Feature_Permutation(_TsCaptum_Method):
+class Feature_Permutation(_tsCaptum_Method):
 	r"""
 	Wrapper for feature permutation method
 	"""
@@ -145,14 +145,14 @@ class Feature_Permutation(_TsCaptum_Method):
 
 	def explain(self, samples, **kwargs):
 		r"""
-		extending _TsCaptum_Method's explain by fixing some arguments as defined by Captum implementation.
+		extending _tsCaptum_Method's explain by fixing some arguments as defined by Captum implementation.
 		For Feature Permutation takes care of the batch_size > 2 and baseline which can't be provided
 
 		:param samples: samples to be explained
 
 		:param kwargs:  additional arguments
 
-		:calling:       _TsCaptum_Method'e explain
+		:calling:       _tsCaptum_Method'e explain
 		"""
 		if 'batch_size' in kwargs and kwargs['batch_size'] != 1:
 			warnings.warn(
@@ -167,7 +167,7 @@ class Feature_Permutation(_TsCaptum_Method):
 		return super().explain(samples, **kwargs)
 
 
-class Kernel_Shap(_TsCaptum_Method):
+class Kernel_Shap(_tsCaptum_Method):
 	r"""
 	Wrapper for KernelSHAP method
 	"""
@@ -177,14 +177,14 @@ class Kernel_Shap(_TsCaptum_Method):
 
 	def explain(self, samples, **kwargs):
 		r"""
-		extending _TsCaptum_Method'e explain by fixing some arguments as defined by Captum implementation.
+		extending _tsCaptum_Method'e explain by fixing some arguments as defined by Captum implementation.
 		For KernelSHAP takes care of the batch_size suggested to be equal to 1
 
 		:param samples: samples to be explained
 
 		:param kwargs:  additional arguments
 
-		:calling:       _TsCaptum_Method's explain
+		:calling:       _tsCaptum_Method's explain
 		"""
 		if 'batch_size' in kwargs and kwargs['batch_size'] != 1:
 			warnings.warn(
@@ -194,7 +194,7 @@ class Kernel_Shap(_TsCaptum_Method):
 		return super().explain(samples, **kwargs)
 
 
-class LIME(_TsCaptum_Method):
+class LIME(_tsCaptum_Method):
 	r"""
 	Wrapper for LIME method
 	"""
@@ -204,14 +204,14 @@ class LIME(_TsCaptum_Method):
 
 	def explain(self, samples, **kwargs):
 		r"""
-		extending _TsCaptum_Method'e explain by fixing some arguments as defined by Captum implementation.
+		extending _tsCaptum_Method'e explain by fixing some arguments as defined by Captum implementation.
 		For LIME takes care of the batch_size suggested to be equal to 1
 
 		:param samples: samples to be explained
 
 		:param kwargs:  additional arguments
 
-		:calling:       _TsCaptum_Method's explain
+		:calling:       _tsCaptum_Method's explain
 		"""
 		if 'batch_size' in kwargs and kwargs['batch_size'] != 1:
 			warnings.warn(
@@ -221,7 +221,7 @@ class LIME(_TsCaptum_Method):
 		return super().explain(samples, **kwargs)
 
 
-class Shapley_Value_Sampling(_TsCaptum_Method):
+class Shapley_Value_Sampling(_tsCaptum_Method):
 	r"""
 	Wrapper for Shapley Value Sampling method. Most of the time this is the best approximation of the intractable
 	Shapley values
