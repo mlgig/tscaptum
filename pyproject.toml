@@ -3,7 +3,7 @@ requires = ["setuptools>=69.5.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "TsCaptum"
+name = "tsCaptum"
 version = "0.0.4.1"
 authors = [  { name="Davide Serramazza", email="davide.serramazza@ucdconnect.ie" },]
 description = "A Captum wrapper for Time Series XAI"
