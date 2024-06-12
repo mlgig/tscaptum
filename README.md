@@ -24,10 +24,17 @@ exp = mySHAP.explain(CMJ_X_test_samples, labels=CMJ_y_test_samples,  n_segments=
 More examples can be found in the [examples_tscaptum notebook](https://github.com/mlgig/tscaptum/blob/main/examples_tscaptum.ipynb) with detailed steps for training, prediction and 
 explanation.
 
-It can be installed by typing the command "pip install tsCaptum" or in case you have problems 
-installing torch (e.g. you use Linux as OS and you want a lighter installation) use 
-"pip3 install torch --index-url https://download.pytorch.org/whl/cpu && pip install tsCaptum"
+## Installation using pip
+```
+pip install tsCaptum
+```
 
+In case you have problems installing torch (e.g. you use Linux as OS and you want a lighter installation) use 
+```
+pip install torch --index-url https://download.pytorch.org/whl/cpu && pip install tsCaptum
+```
+
+## Citation
 In case you use this library please cite:
 ```
 @misc{tsCaptum,
