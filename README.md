@@ -23,6 +23,7 @@ exp = mySHAP.explain(CMJ_X_test_samples, labels=CMJ_y_test_samples,  n_segments=
 
 More examples can be found in the [examples_tscaptum notebook](https://github.com/mlgig/tscaptum/blob/main/examples_tscaptum.ipynb) with detailed steps for training, prediction and 
 explanation.
+Some of the attribution methods available in captum have been described and quantitatively evaluated form time series explanation in our recent [ECMLPKDD 2024 paper](https://github.com/mlgig/xai4mtsc_eval_actionability/tree/main?tab=readme-ov-file).
 
 ## Installation using pip
 ```
