@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 
+
+def plot_saliency_map_multi(sample, attribution, title = 'Saliency map'):
+	return None
 def plot_saliency_map_uni(sample, attribution, title = 'Saliency map'):
 
 	def transform(X):
