@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-
+from ._ridge_classifier import proba4ridge
 
 # documentation for each method!
 
@@ -19,12 +19,19 @@ class _Forwarder:
 		:
 		param predictor_type: (optional) the predictor variable's type i.e. regressor or classifier
 		"""
-		# TODO should I make the following two variables private?
 		self.predictor = predictor
+
 		if predictor_type == "regressor":
 			self.raw_result_func = self.predictor.predict
+			self.features_transform = None
+
+		elif predictor_type == "ridge_classifier":
+			self.raw_result_func, self.features_transform = proba4ridge(self.predictor)
+
 		elif predictor_type == "classifier":
 			self.raw_result_func = self.predictor.predict_proba
+			self.features_transform = None
+
 		else:
 			raise " provided model not recognized. Please specify whether is a classifier or regressor "
 
@@ -39,6 +46,11 @@ class _Forwarder:
 
 		# convert X to pytorch tensor
 		X_numpy: np.array = X.detach().numpy()
+
+		# transform the feature if this is needed e.g. Rocket
+		if self.features_transform!=None:
+			X_numpy = self.features_transform(X_numpy)
+
 		# use the model forward function
 		preds: np.array = self.raw_result_func(X_numpy)
 		# return result as torch tensor as expected by captum attribution method

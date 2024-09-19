@@ -61,7 +61,8 @@ def _check_labels(labels, predictor_type):
 
 	:return:                label encoder and relative integer indices
 	"""
-	if predictor_type == "classifier":
+
+	if predictor_type.count("classifier")>0:
 		# transform to numeric labels
 		le = LabelEncoder()
 		labels_idx = torch.tensor(le.fit_transform(labels)).type(torch.int64)
@@ -102,8 +103,9 @@ def _check_convert_data_format(X, labels, batch_size):
 				"provided samples and labels have different dimensions"
 			)
 
+	# check features
 	if isinstance(X, np.ndarray):
-		X = torch.tensor(X).type(torch.float)
+		X = torch.tensor(X)
 	elif isinstance(X, torch.Tensor):
 		X = X.type(torch.float)
 	else:
@@ -111,6 +113,7 @@ def _check_convert_data_format(X, labels, batch_size):
 			" Data format has to be either numpy array or torch tensor "
 		)
 
+	# check labels
 	if labels is None:
 		labels = torch.ones(X.shape[0]) * -1
 	loader = DataLoader(_tsCaptum_loader(X, labels), shuffle=False, batch_size=batch_size)

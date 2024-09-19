@@ -11,6 +11,7 @@ from captum.attr import (FeatureAblation as _FeatureAblationCaptum,
 from ._forwarder import _Forwarder
 from ._utils import _check_convert_data_format, _check_labels, _normalise_result, _equal_length_segmentation
 from ._utils import *
+from ._ridge_classifier import isRidgeInstance
 
 
 class _tsCaptum_Method:
@@ -41,19 +42,29 @@ class _tsCaptum_Method:
 		# in case predictor_type argument isn't provided tell it calling the predict_proba method:
 		# if it's present the predictor is a classifier otherwise is a regressor
 		self.predictor_type = predictor_type
-		if self.predictor_type is None:
+
+		# special case for ridge
+		if isRidgeInstance(predictor):
+			print("ridge classifier detected")
+			self.predictor_type = "ridge_classifier"
+
+		elif self.predictor_type is None:
+			# in case no classifier or regressor provided, look for predict_proba function
 			self.predictor_type = "classifier"
 			try:
 				predictor.predict_proba
+				print("classifier detected")
 			except AttributeError:
 				self.predictor_type = "regressor"
+				print("regressor detected")
 
 		# set also forward function and explainer to be used
 		self._Forwarder = _Forwarder(predictor, self.predictor_type)
 		self._explainer = explainer(self._Forwarder.forward)
 
+
 	def explain(self, samples, labels=None, batch_size=8, n_segments=10, normalise=False, baseline=0):
-		r"""
+		"""
 		main method to get a saliency map by the selected explainer
 
 		:param samples:     samples to be explained
@@ -79,6 +90,8 @@ class _tsCaptum_Method:
 		le, labels_idx = _check_labels(labels, self.predictor_type)
 		loader = _check_convert_data_format(samples, labels_idx, batch_size)
 
+		# TODO pre-allocate a np.array?
+		# TODO what about the small diffs from torch.tensor to np.array?
 		explanations = []
 		with tqdm(total=n_2explain) as pbar:
 			with torch.no_grad():
@@ -87,9 +100,12 @@ class _tsCaptum_Method:
 					kwargs = self._define_kwargs(baseline, n_channels, n_segments, series_length, y)
 					# get the current saliency maps, convert it to numpy array and store it to a temp list
 					current_exps = self._explainer.attribute(X, **kwargs)
+
 					explanations.append(
 						_normalise_result(current_exps.detach().numpy())) if normalise \
-						else explanations.append(current_exps.detach().numpy())
+						else explanations.append(current_exps.detach().numpy()
+					)
+
 					pbar.update(batch_size)
 		pbar.close()
 
@@ -97,8 +113,9 @@ class _tsCaptum_Method:
 		explanations = np.concatenate(explanations)
 		return explanations
 
+
 	def _define_kwargs(self, baseline, n_channels, n_segments, series_length, y):
-		r"""
+		"""
 		inner function that checking provided argument to explain, define the correct kwarg dictionary
 
 		:return: kwarg dictionary for the relative captum method
@@ -115,7 +132,7 @@ class _tsCaptum_Method:
 				kwargs['baselines'] = baseline
 
 		# labels
-		if self.predictor_type == "classifier":
+		if self.predictor_type in ['classifier','ridge_classifier']:
 			kwargs['target'] = y
 
 		# define feature mask looking at the desired number of segment
@@ -127,7 +144,7 @@ class _tsCaptum_Method:
 
 
 class Feature_Ablation(_tsCaptum_Method):
-	r"""
+	"""
 	Wrapper for Feature Ablation method
 	"""
 
@@ -136,7 +153,7 @@ class Feature_Ablation(_tsCaptum_Method):
 
 
 class Feature_Permutation(_tsCaptum_Method):
-	r"""
+	"""
 	Wrapper for feature permutation method
 	"""
 
@@ -168,7 +185,7 @@ class Feature_Permutation(_tsCaptum_Method):
 
 
 class Kernel_Shap(_tsCaptum_Method):
-	r"""
+	"""
 	Wrapper for KernelSHAP method
 	"""
 
@@ -195,7 +212,7 @@ class Kernel_Shap(_tsCaptum_Method):
 
 
 class LIME(_tsCaptum_Method):
-	r"""
+	"""
 	Wrapper for LIME method
 	"""
 
@@ -222,7 +239,7 @@ class LIME(_tsCaptum_Method):
 
 
 class Shapley_Value_Sampling(_tsCaptum_Method):
-	r"""
+	"""
 	Wrapper for Shapley Value Sampling method. Most of the time this is the best approximation of the intractable
 	Shapley values
 	"""
