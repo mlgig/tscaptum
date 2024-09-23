@@ -1,3 +1,5 @@
+import numpy as np
+import torch
 from tqdm import tqdm
 import warnings
 
@@ -92,7 +94,7 @@ class _tsCaptum_Method:
 
 		# TODO pre-allocate a np.array?
 		# TODO what about the small diffs from torch.tensor to np.array?
-		explanations = []
+		explanations = np.empty( shape=samples.shape, dtype=samples.dtype)
 		with tqdm(total=n_2explain) as pbar:
 			with torch.no_grad():
 				for n, (X, y) in enumerate(loader):
@@ -101,16 +103,14 @@ class _tsCaptum_Method:
 					# get the current saliency maps, convert it to numpy array and store it to a temp list
 					current_exps = self._explainer.attribute(X, **kwargs)
 
-					explanations.append(
-						_normalise_result(current_exps.detach().numpy())) if normalise \
-						else explanations.append(current_exps.detach().numpy()
-					)
+					explanations[n*batch_size : min (n*batch_size+batch_size , samples.shape[0] ) ] = \
+						_normalise_result(current_exps.detach().numpy()) if normalise \
+						else current_exps.detach().numpy()
 
 					pbar.update(batch_size)
 		pbar.close()
 
 		# convert the list to numpy array and return it as result
-		explanations = np.concatenate(explanations)
 		return explanations
 
 

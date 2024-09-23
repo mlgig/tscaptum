@@ -96,7 +96,7 @@ def _check_convert_data_format(X, labels, batch_size):
 	:return:            data loader to be used in the explain method
 	"""
 
-	if X is None and labels is not None:
+	if X is not None and labels is not None:
 		if X.shape[0] != labels.shape[0]:
 			# if both X and labels are provided having no matching dimensions
 			raise ValueError(
