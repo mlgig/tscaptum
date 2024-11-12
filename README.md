@@ -40,10 +40,10 @@ In case you use this library please cite:
 ```
 @misc{tsCaptum,
     author = {Davide Italo Serramazza, Thach Le Nguyen, Georgiana Ifrim},
-    title = {tsCaptum: adapting Captum explainers for time series and scikit-learn-like predictors},
+    title = {A Short Tutorial for Multivariate Time Series Explanation using tsCaptum},
     journal = {Software Impacts},
     year = {2024},
-    note = {},
+    note = {In Press},
     url = { https://github.com/mlgig/tscaptum},
 }
 ```
