@@ -41,9 +41,9 @@ In case you use this library please cite:
 @misc{tsCaptum,
     author = {Davide Italo Serramazza, Thach Le Nguyen, Georgiana Ifrim},
     title = {tsCaptum: adapting Captum explainers for time series and scikit-learn-like predictors},
-    howpublished = {GitHub},
+    journal = {Software Impacts},
     year = {2024},
-    note = {Temporary bibtex entry},
+    note = {},
     url = { https://github.com/mlgig/tscaptum},
 }
 ```
