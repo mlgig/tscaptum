@@ -43,6 +43,7 @@ In case you use this library please cite:
     title = {A Short Tutorial for Multivariate Time Series Explanation using tsCaptum},
     journal = {Software Impacts},
     year = {2024},
+    publisher = {Elsevier},
     note = {In Press},
     url = { https://github.com/mlgig/tscaptum},
 }
