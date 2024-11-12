@@ -7,12 +7,12 @@ from scipy.interpolate import interp1d
 
 def plot_saliency_map_multi(sample, attribution, channel_names = [], title = 'Saliency map', colorbar = True):
 
-	if len(sample.shape) == 1: # if the univariate input is a 1D array 
+	if len(sample.shape) == 1: # if the univariate input is a 1D array
 		sample = np.expand_dims(sample, axis=0)
 		attribution = np.expand_dims(attribution, axis=0)
-		
+
 	n_channels = sample.shape[0]
-	
+
 	x = np.array([ii for ii in range(sample.shape[-1])])
 
 	cap = max(abs(attribution.min()), abs(attribution.max()))
@@ -26,7 +26,7 @@ def plot_saliency_map_multi(sample, attribution, channel_names = [], title = 'Sa
 	tuples = list(zip(map(norm,cvals), colors))
 	cmap = LinearSegmentedColormap.from_list("", tuples)
 
-	
+
 	fig, axs = plt.subplots(n_channels, 1, sharex=True, figsize=(8, 1*n_channels),constrained_layout=True)
 
 	for p in range(sample.shape[0]):
@@ -39,24 +39,24 @@ def plot_saliency_map_multi(sample, attribution, channel_names = [], title = 'Sa
 		lc.set_array(sy)
 		lc.set_linewidth(2)
 
-		
+
 		current_ax = axs if sample.shape[0] == 1 else axs[p]
 
 		line = current_ax.add_collection(lc)
 		current_ax.set_xlim(x.min(), x.max())
 		current_ax.set_ylim(y.min() - 1, y.max()+1)
-		if len(channel_names) >= n_channels:			
+		if len(channel_names) >= n_channels:
 			current_ax.set_ylabel(channel_names[p])
-		
+
 
 
 	if colorbar:
 		fig.colorbar(line, ax=axs, aspect= 50)
-    
-	fig.align_ylabels(axs)
-    
 
-    
+	fig.align_ylabels(axs)
+
+
+
 	plt.show()
 
 def plot_saliency_map_uni(sample, attribution, title = 'Saliency map'):

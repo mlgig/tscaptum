@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tsCaptum"
-version = "0.0.4.1"
+version = "0.0.5"
 authors = [  { name="Davide Serramazza", email="davide.serramazza@ucdconnect.ie" },]
 description = "A Captum wrapper for Time Series XAI"
 readme = "README.md"
 requires-python = ">=3.8,<3.12"
 dependencies = [
 	"scikit-learn",
-	"aeon",
+	"aeon>=0.10.0",
 	"openpyxl",
 	"tqdm",
 	"torch>=2.0.0",
