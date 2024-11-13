@@ -40,7 +40,7 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu && pip instal
 ## Citation
 In case you use this library please cite:
 ```
-@misc{tsCaptum,
+@article{tsCaptum,
     author = {Davide Italo Serramazza, Thach Le Nguyen, Georgiana Ifrim},
     title = {A Short Tutorial for Multivariate Time Series Explanation using tsCaptum},
     journal = {Software Impacts},
