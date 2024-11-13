@@ -3,8 +3,10 @@
 tsCaptum is a library that adapts the popular post-hoc attribution methods implemented in the Captum
 framework to work with time series. Unlike previous libraries tsCaptum is :
 1) Fully compatible with scikit-learn and popular time-series frameworks such as aeon and sktime (e.g., so it is easy to combine ROCKET with SHAP).
-2) Takes advantage of TS locality by using time series segmentation (so SHAP runs fast with long time series and suffers less from vanishing attribution weights) 
-3) It's extremely easy to use requiring almost no effort by the users
+2) Takes advantage of TS locality by using time series segmentation (so SHAP runs fast with long time series and suffers less from vanishing attribution weights).
+3) It is extremely easy to use (see example code below).
+
+The library is described in a recent paper **A Short Tutorial for Multivariate Time Series Explanation using tsCaptum** available [here](https://github.com/mlgig/tscaptum/blob/main/A%20Short%20Tutorial%20for%20Multivariate%20Time%20Series%20Explanation%20using%20tsCaptum.pdf).
 
 ```
 from aeon.classification.convolution_based import RocketClassifier
