@@ -46,6 +46,7 @@ In case you use this library please cite:
     journal = {Software Impacts},
     year = {2024},
     publisher = {Elsevier},
+    doi = {https://doi.org/10.1016/j.simpa.2024.100723}
     note = {In Press},
     url = { https://github.com/mlgig/tscaptum},
 }
