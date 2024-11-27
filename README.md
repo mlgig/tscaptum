@@ -1,4 +1,4 @@
-# tsCaptum - A library for univariate and multivariate time series explanation
+# tsCaptum - [A library for univariate and multivariate time series explanation](https://doi.org/10.1016/j.simpa.2024.100723)
 
 tsCaptum is a library that adapts the popular post-hoc attribution methods implemented in the Captum
 framework to work with time series. Unlike previous libraries tsCaptum is :
