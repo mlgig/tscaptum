@@ -1,12 +1,10 @@
-# tsCaptum - [A library for univariate and multivariate time series explanation](https://doi.org/10.1016/j.simpa.2024.100723)
+# tsCaptum - A library for univariate and multivariate time series explanation
 
 tsCaptum is a library that adapts the popular post-hoc attribution methods implemented in the Captum
 framework to work with time series. Unlike previous libraries tsCaptum is :
 1) Fully compatible with scikit-learn and popular time-series frameworks such as aeon and sktime (e.g., so it is easy to combine ROCKET with SHAP).
-2) Takes advantage of TS locality by using time series segmentation (so SHAP runs fast with long time series and suffers less from vanishing attribution weights).
-3) It is extremely easy to use (see example code below).
-
-The library is described in a recent paper **A Short Tutorial for Multivariate Time Series Explanation using tsCaptum** available [here](https://github.com/mlgig/tscaptum/blob/main/A%20Short%20Tutorial%20for%20Multivariate%20Time%20Series%20Explanation%20using%20tsCaptum.pdf).
+2) Takes advantage of TS locality by using time series segmentation (so SHAP runs fast with long time series and suffers less from vanishing attribution weights) 
+3) It's extremely easy to use requiring almost no effort by the users
 
 ```
 from aeon.classification.convolution_based import RocketClassifier
@@ -40,13 +38,12 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu && pip instal
 ## Citation
 In case you use this library please cite:
 ```
-@article{tsCaptum,
+@misc{tsCaptum,
     author = {Davide Italo Serramazza, Thach Le Nguyen, Georgiana Ifrim},
     title = {A Short Tutorial for Multivariate Time Series Explanation using tsCaptum},
     journal = {Software Impacts},
     year = {2024},
     publisher = {Elsevier},
-    doi = {https://doi.org/10.1016/j.simpa.2024.100723}
     note = {In Press},
     url = { https://github.com/mlgig/tscaptum},
 }

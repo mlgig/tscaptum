@@ -79,6 +79,10 @@ def plot_saliency_map_uni(sample, attribution, title = 'Saliency map'):
 	weight = fcas(x2) # convert vector of original weight vector to new weight vector
 
 	plt.figure(figsize=(6, 2))
-	plt.scatter(x2,f(x2), c = weight, cmap = 'jet', marker='.', s= 1,vmin=0,vmax = 100)
+	scatter = plt.scatter(x2,f(x2), c = weight, cmap = 'jet', marker='.', s= 1,vmin=0,vmax = 100)
+
+	#cbar_ax = plt.add_axes([0.925, 0.2, 0.03, 0.5])  # [left, bottom, width, height]
+	plt.colorbar(scatter)#, cax=cbar_ax)
+
 	plt.title(title)
 	plt.show()
