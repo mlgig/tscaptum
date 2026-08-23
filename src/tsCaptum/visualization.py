@@ -5,7 +5,7 @@ from matplotlib.collections import LineCollection
 from scipy.interpolate import interp1d
 
 
-def plot_saliency_map_multi(sample, attribution, channel_names = [], title = 'Saliency map', colorbar = True):
+def plot_saliency_map_multi(sample, attribution, channel_names = [], title = None, colorbar = True):
 
 	if len(sample.shape) == 1: # if the univariate input is a 1D array
 		sample = np.expand_dims(sample, axis=0)
@@ -56,7 +56,8 @@ def plot_saliency_map_multi(sample, attribution, channel_names = [], title = 'Sa
 	fig.align_ylabels(axs)
 
 
-
+	if title!=None :
+		plt.title(title)
 	plt.show()
 
 def plot_saliency_map_uni(sample, attribution, title = 'Saliency map'):
